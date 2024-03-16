@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOME PAGE</title>
+  {% load static %}
+  <!-- CSS CUSTOM -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .rectangle-6,
+    .rectangle-6 * {
+      box-sizing: border-box;
+    }
+
+    .d-block {
+      width: 100%;
+      height: 545px;
+      object-fit: cover;
+    }
+
+    #pizza {
+      object-position: 20% 50%;
+    }
+
+    #coffee {
+      object-position: 20% 75%;
+    }
+
+    #burger {
+      object-position: 20% 90%;
+    }
+
+    #logo {
+      /* width:10%;  */
+      max-width: fit-content;
+      max-block-size: 55px;
+      object-fit: fill;
+      margin-left: 2px;
+      margin-top: 1px;
+      background-color: rgb(254, 204, 144);
+      /* margin-right: 400px; */
+    }
+
+    .rectangle {
+      background-color: rgba(138, 138, 138, 0.40);
+      border-radius: 50px;
+      width: 293px;
+      height: 550px;
+      position: relative;
+      backdrop-filter: 3.5px;
+    }
+
+    .rectangle-6 {
+      background-color: rgba(138, 138, 138, 0.40);
+      border-radius: 50px;
+      width: 293px;
+      position: relative;
+      backdrop-filter: 3.5px;
+      filter: blur(2.5px);
+    }
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+
+<body style=>
+  <!-- Navbar Starts Here -->
+  <div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand " href="#">
+          <img src="images/DT1.png" id="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon "></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav" style="margin-left: 30%;">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active " href="#">Contact Us</a>
+            </li>
+            {% if user.is_authenticated%}
+            <div class="alert alert-primary" role="alert">
+              Welcome {{ user.username }}
+            </div>
+            <li>
+              <form method="post" action="{% url 'logout1' %}">
+                {% csrf_token %}
+                <button class="btn">Logout</button>
+              </form>
+            </li>
+            <li>
+              <div style="margin-left: 20%;">
+                {% else %}
+                <form method="get" action="{% url 'login1' %}">
+                  {% csrf_token %}
+                  <a><button class="btn"
+                      style="font-size: larger;background-color: rgb(254, 204, 144);font-weight:bold;margin-left: 240px; margin-right: 3px;">Log
+                      In</button></a>
+                </form>
+                <form method="get" action="{% url 'signup1' %}">
+                  {% csrf_token %}
+                  <a><button class="btn"
+                      style="font-size: larger;background-color: rgb(254, 204, 144);font-weight:bold;">Sign
+                      up</button></a>
+                </form>
+                {% endif %}
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- <a><button class="btn" style="font-size: larger;background-color: rgb(254, 204, 144);font-weight:bold;margin: 2px;">Log In</button></a> -->
+      </div>
+    </nav>
+  </div>
+
+  <!-- Navbar Ends Here  -->
+
+  <!-- Carousel Start Here -->
+
+  <div id="carouselExampleCaptions" class="carousel slide">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+        aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+        aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+        aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner h-100 ">
+      <div class="carousel-item active">
+        <img
+          src="https://images.pexels.com/photos/1556688/pexels-photo-1556688.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          id="burger" class="d-block w-100" alt="image">
+        <div class="carousel-caption d-none d-md-block " style="margin-bottom: 30%;margin-left: 25%;">
+          <h5 style=" font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight: bold;">BURGER
+          </h5>
+          <p style=" font-family: 'Times New Roman', Times, serif; ">Crafting Burgers Beyond Ordinary – Taste the
+            Difference!</p>
+        </div>
+      </div>
+      <div class="carousel-item h-100">
+        <img
+          src="https://images.pexels.com/photos/3186743/pexels-photo-3186743.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          id="coffee" class="d-block w-100" alt="image">
+        <div class="carousel-caption d-none d-md-block" style="margin-bottom: 30%;margin-left: 52%;">
+          <h5 style=" font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight: bold;">
+            NESCAFE Classic</h5>
+          <p style="font-family: 'Times New Roman', Times, serif;">Start Strong, Start with Nescafé</p>
+        </div>
+      </div>
+      <div class="carousel-item w-100">
+        <img
+          src="https://img.freepik.com/free-photo/freshly-baked-homemade-pizza-rustic-table-generated-by-ai_24640-81778.jpg?t=st=1692708968~exp=1692709568~hmac=82413e8297014d1058da3141f42208d27a2eaec29602139e96cbf6407523d85d"
+          id="pizza" class="d-block w-100" alt="image">
+        <div class="carousel-caption d-none d-md-block" style="margin-bottom: 32%;margin-left: 33%;">
+          <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight: bold;">PIZZA
+            MANIA</h5>
+          <p style=" font-family: 'Times New Roman', Times, serif;">A Slice of Heaven, Now at Heavenly Prices!</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <div class="container text-center mt-4">
+    <p style="font-weight: bolder; font-size: 35px;">Our Products</p>
+  </div>
+
+  <!-- Carousel ends here -->
+
+
+  <!-- Product begins here -->
+  <div class="container text-center">
+    <div class="row">
+      {% for y in x %}
+      <div class="col">
+        <div class="rectangle">
+          <div class="rectangle-6">
+            <img src="{{ y.img.url }}" alt="image"
+              style="width: 100%; height: 290px; object-fit: cover;object-position: 50% 70%;">
+          </div>
+          <p class="card-title" style="font-weight: bold;font-size: 30px;">{{ y.Title }}</p>
+          <!--<p class="card-text">#{{ y.product_id}}</p> -->
+          <p style="font-weight: bold;font-size: 20px;">Price : {{y.price}}/-</p>
+          <p>{{y.Description|slice:":80"}}...</p>
+          <a href="#" class="btn" style="background-color:slategrey; font-weight: bolder;">ADD TO CART</a>
+          <a class="btn" href="{{y.id}}">More</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Product Ends Here -->
+
+  <!-- Footer Starts Here  -->
+  <div>
+    {% include 'app1/footer.html' %}
+  </div>
+  <!-- Footer Ends Here -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

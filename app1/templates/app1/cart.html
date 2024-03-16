@@ -1,0 +1,66 @@
+                <!-- Cart Section Starts Here  -->
+                <div class="container">
+                  <h1 style="text-align: center; margin-top: 10px;">{{cart}}</h1>
+                  <div class="row">
+                      <h1 style="text-align: center;margin-top: 20px;">{{k}}</h1>
+                      <div class="container1" style="display: flex;flex-direction: row;justify-content:right;">
+                          {% for y in p %}
+
+
+                          <div class="col">
+
+                              <div class="container text-center" style="background-color: burlywood; ">
+
+                                  <div class="card mb-3 mt-3" id="product-card" style="width: 18rem;
+                              background-color: #fce8c4;
+                              border-radius: 25px;
+                              align-items: center;">
+
+                                      <img src="{{ y.img.url }}" class="card-img-top" alt="image">
+
+                                      <div class="card-body">
+
+                                          <p class="card-title">{{ y.Title }}</p>
+
+                                          <!--<p class="card-text">#{{ y.product_id}}</p> -->
+
+                                          <p style="font-weight: bold;font-size: 20px;">Price : {{y.price}}/-</p>
+
+                                          <p>{{y.Description|slice:":80"}}...</p>
+                                          <div class="container2"
+                                              style="display: flex; flex-direction: row; justify-content: center;">
+
+                                              <form method="post" action="{% url 'cart' %}">
+
+                                                  {% csrf_token %}
+
+
+                                                  <a class="btn" href="{{y.id}}">More</a>
+
+
+
+                                              </form>
+
+                                              <form method="post" action="{% url 'remove_item_cart' %}">
+                                                  {% csrf_token %}
+                                                  <button value="{{y.Product_id}}" id="rc_btn" name="rc_btn"
+                                                      class="btn, btn1">Remove</button>
+                                              </form>
+                                          </div>
+
+
+
+                                      </div>
+
+                                  </div>
+
+                              </div>
+
+                          </div>
+                          {% endfor %}
+
+                      </div>
+
+                  </div>
+                  </div>
+

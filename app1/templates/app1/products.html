@@ -1,0 +1,101 @@
+<!-- Product begins here -->
+
+<div class="container text-center mt-4">
+
+  <p id="products" style="font-weight: bolder; font-size: 35px;">Our Products</p>
+
+</div>
+
+
+<div class="container text-center" style="background-color:burlywood; display: flex; flex-direction: column; justify-content: center;">
+
+  <div class="row">
+    {% for y in page_obj %}
+
+    <div class="col">
+
+      <div class="container text-center" style="background-color: burlywood; ">
+
+        <div class="card mb-3 mt-3" id="product-card" style="width: 18rem;
+        background-color: #fce8c4;
+        border-radius: 25px;
+        align-items: center;">
+
+          <img src="{{ y.img.url }}" class="card-img-top" alt="image" >
+
+          <div class="card-body">
+
+            <p class="card-title">{{ y.Title }}</p>
+
+            <!--<p class="card-text">#{{ y.product_id}}</p> -->
+
+            <p style="font-weight: bold;font-size: 20px;">Price : {{y.price}}/-</p>
+
+            <p>{{y.Description|slice:":80"}}...</p>
+
+            <form method="post" action="{% url 'cart' %}">
+
+              {% csrf_token %}
+
+              <button class="btn, btn1" value="{{y.Product_id}}" id="c_btn" name="c_btn">ADD TO CART</button>
+              <a class="btn" href="{{y.id}}">More</a>
+
+            </form>
+
+
+
+            <form method="post" action="{% url 'add_wishlists' %}">
+
+              {% csrf_token %}
+
+              <button class="btn, btn1" value="{{y.Product_id}}" id="w_btn" name="w_btn"
+                style="margin-top: 5px; width: 80%">Wishlist</button>
+
+            </form>
+
+
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {% endfor %}
+</div>
+
+    <div class="pagination mb-3 mt-1">
+
+      <span class="step-links" style="width: 180vmin;">
+
+        {% if page_obj.has_previous %}
+
+        <a href="?page=1" class="page-button">&laquo; First</a>
+
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-button">Previous</a>
+
+        {% endif %}
+
+        <span class="current">
+
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+
+        </span>
+
+        {% if page_obj.has_next %}
+
+        <a href="?page={{ page_obj.next_page_number }}" class="page-button">Next</a>
+
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="page-button">Last &raquo;</a>
+
+        {% endif %}
+
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
