@@ -33,7 +33,7 @@
   <div class="container" >
 
     <div class="row">
-
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">  
       {% for y in x %}
 
       <div class="col">
@@ -88,10 +88,19 @@
       </div>
 
       {% endfor %}
-
+      </div>
     </div>
 
   </div>
+  <style>
+    @media (max-width: 768px) {
+      .container.text-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 
 
 

@@ -14,7 +14,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
-    
+
 </head>
 
 <body style="background-color:burlywood;">
@@ -37,7 +37,7 @@
       <form method="post" action="" id="mychoice">
 
         {% csrf_token %}
-        
+
         <div class="container">
 
           <label for="food">
@@ -83,65 +83,74 @@
     </div>
 
     <div class="row">
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
+        {% for y in x %}
 
-      {% for y in x %}
+        <div class="col">
 
-      <div class="col">
+          <div class="container text-center" style="background-color: burlywood; ">
 
-        <div class="container text-center" style="background-color: burlywood; ">
-  
-          <div class="card mb-3 mt-3" id="product-card" style="width: 18rem;
+            <div class="card mb-3 mt-3" id="product-card" style="width: 18rem;
           background-color: #fce8c4;
           border-radius: 25px;
           align-items: center;">
-  
-            <img src="{{ y.img.url }}" class="card-img-top" alt="image" >
-  
-            <div class="card-body">
-  
-              <p class="card-title">{{ y.Title }}</p>
-  
-              <!--<p class="card-text">#{{ y.product_id}}</p> -->
-  
-              <p style="font-weight: bold;font-size: 20px;">Price : {{y.price}}/-</p>
-  
-              <p>{{y.Description|slice:":80"}}...</p>
-  
-              <form method="post" action="{% url 'cart' %}">
-  
-                {% csrf_token %}
-  
-                <button class="btn, btn1" value="{{y.Product_id}}" id="c_btn" name="c_btn">ADD TO CART</button>
-                <a class="btn" href="{{y.id}}">More</a>
-  
-              </form>
-  
-  
-  
-              <form method="post" action="{% url 'add_wishlists' %}">
-  
-                {% csrf_token %}
-  
-                <button class="btn, btn1" value="{{y.Product_id}}" id="w_btn" name="w_btn"
-                  style="margin-top: 5px; width: 80%">Wishlist</button>
-  
-              </form>
-  
-  
-  
+
+              <img src="{{ y.img.url }}" class="card-img-top" alt="image">
+
+              <div class="card-body">
+
+                <p class="card-title">{{ y.Title }}</p>
+
+                <!--<p class="card-text">#{{ y.product_id}}</p> -->
+
+                <p style="font-weight: bold;font-size: 20px;">Price : {{y.price}}/-</p>
+
+                <p>{{y.Description|slice:":80"}}...</p>
+
+                <form method="post" action="{% url 'cart' %}">
+
+                  {% csrf_token %}
+
+                  <button class="btn, btn1" value="{{y.Product_id}}" id="c_btn" name="c_btn">ADD TO CART</button>
+                  <a class="btn" href="{{y.id}}">More</a>
+
+                </form>
+
+
+
+                <form method="post" action="{% url 'add_wishlists' %}">
+
+                  {% csrf_token %}
+
+                  <button class="btn, btn1" value="{{y.Product_id}}" id="w_btn" name="w_btn"
+                    style="margin-top: 5px; width: 80%">Wishlist</button>
+
+                </form>
+
+
+
+              </div>
+
             </div>
-  
+
           </div>
-  
+
         </div>
-  
+
+        {% endfor %}
       </div>
-
-      {% endfor %}
-
     </div>
 
   </div>
+  <style>
+    @media (max-width: 768px) {
+      .container.text-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"

@@ -137,7 +137,7 @@
                     <div class="row">
                         <h1 style="text-align: center;margin-top: 20px;">{{wishlist}}</h1>
                         <h1 style="text-align: center;margin-top: 20px;">{{l}}</h1>
-                        <div class="container3" style="display: flex; flex-direction: row;">
+                        <div class="container3" style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
                             {% for y in o %}
                             <div class="col">
 
@@ -192,6 +192,15 @@
                         </div>
 
                     </div>
+                    <style>
+                        @media (max-width: 768px) {
+                          .container.text-center {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                          }
+                        }
+                      </style>
 
                 </div>
 
