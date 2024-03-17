@@ -27,29 +27,36 @@
         <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
             <div class="position-sticky">
                 <div class="list-group list-group-flush mx-3 mt-4">
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
+                    <a href="#" class="list-group-item list-group-item-action py-2 ripple username-link"
+                        aria-current="true">
                         <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>{{user.username}}</span>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple active">
+
+                    <a href="#" id="profile-link" class="list-group-item list-group-item-action py-2 ripple active">
                         <i class="fas fa-chart-area fa-fw me-3"></i><span>Your profile</span>
                     </a>
-                    <a href="{% url 'show_wishlists' %}" class="list-group-item list-group-item-action py-2 ripple"><i
+                    <a href="{% url 'show_wishlists' %}" id="wishlist-link"
+                        class="list-group-item list-group-item-action py-2 ripple"><i
                             class="fas fa-lock fa-fw me-3"></i><span>Wishlist</span></a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
+                    <a href="#" id="payment-link" class="list-group-item list-group-item-action py-2 ripple"><i
                             class="fas fa-chart-line fa-fw me-3"></i><span>Payment</span></a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple">
+                    <a href="#" id="orders-link" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-chart-pie fa-fw me-3"></i><span>Your Orders</span>
                     </a>
-                    <a href="{% url 'show_cart' %}" class="list-group-item list-group-item-action py-2 ripple"><i
+                    <a href="{% url 'show_cart' %}" id="cart-link"
+                        class="list-group-item list-group-item-action py-2 ripple"><i
                             class="fas fa-chart-bar fa-fw me-3"></i><span>Your Cart</span></a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
+                    <a href="#" id="feedback-link" class="list-group-item list-group-item-action py-2 ripple"><i
                             class="fas fa-globe fa-fw me-3"></i><span>Feedback</span></a>
-                    <a href="{% url 'home' %}" class="list-group-item list-group-item-action py-2 ripple"><i
+                    <a href="{% url 'home' %}" id="home-link"
+                        class="list-group-item list-group-item-action py-2 ripple"><i
                             class="fas fa-building fa-fw me-3"></i><span>Go to home</span></a>
-                    <a href="{% url 'logout' %}" class="list-group-item list-group-item-action py-2 ripple"><i
-                            class="fas fa-calendar fa-fw me-3"></i><span>Logout</span>
+                    <a href="{% url 'logout' %}" id="logout-link"
+                        class="list-group-item list-group-item-action py-2 ripple"><i
+                            class="fas fa-calendar fa-fw me-3"></i><span>Logout</span></a>
 
-                        </form></output> <output></output></a>
+
+                    </form></output> <output></output></a>
                 </div>
             </div>
         </nav>
@@ -604,6 +611,57 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get all navigation links
+            const navLinks = document.querySelectorAll(".list-group-item");
+
+            // Function to remove 'active' class from all navigation links
+            function removeActiveClass() {
+                navLinks.forEach(function (navLink) {
+                    navLink.classList.remove("active");
+                });
+            }
+
+            // Add click event listener to each navigation link
+            navLinks.forEach(function (link) {
+                // Exclude the username link
+                if (!link.classList.contains("username-link")) {
+                    link.addEventListener("click", function (event) {
+                        // Prevent the default behavior of the link
+                        event.preventDefault();
+
+                        // If the clicked link is already active, do nothing
+                        if (link.classList.contains("active")) {
+                            return;
+                        }
+
+                        // Remove 'active' class from all navigation links
+                        removeActiveClass();
+
+                        // Add 'active' class to the clicked navigation link
+                        link.classList.add("active");
+
+                        // Redirect to the respective page after a short delay
+                        setTimeout(function () {
+                            window.location.href = link.href;
+                        }, 1); // Adjust delay as needed
+                    });
+                }
+            });
+
+            // Check if the current URL matches the href attribute of any link
+            navLinks.forEach(function (link) {
+                if (window.location.href === link.href) {
+                    // Remove 'active' class from all navigation links
+                    removeActiveClass();
+
+                    // Add 'active' class to the link whose href matches the current URL
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
 
 
 </body>
