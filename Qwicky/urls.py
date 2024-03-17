@@ -33,6 +33,7 @@ urlpatterns = [
     path('signup',views.signupuser,name='signup'),
     path('login',views.loginuser,name='login'),
     path('logout',views.logoutuser,name='logout'),
+    path('settings',views.settings,name="settings"),
     path('add_wishlists',views.add_wishlists,name='add_wishlists'),
     path('cart',views.add_to_cart,name='cart'),
     path('<int:pid>', views.details, name='details'),

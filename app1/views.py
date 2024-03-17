@@ -137,7 +137,8 @@ def logoutuser(request):
         logout(request)
         return redirect('home')
     
-
+def settings(request):
+    return render(request,"app1/settings.html")
 
 @login_required
 def add_to_cart(request):
