@@ -10,16 +10,16 @@
 <div class="container text-center" style="background-color:burlywood; display: flex; flex-direction: column; justify-content: center;">
 
   <div class="row">
+
+    <div style="display: flex;flex-direction: row; justify-content: center;">
+
     {% for y in page_obj %}
 
     <div class="col">
 
       <div class="container text-center" style="background-color: burlywood; ">
 
-        <div class="card mb-3 mt-3" id="product-card" style="width: 18rem;
-        background-color: #fce8c4;
-        border-radius: 25px;
-        align-items: center;">
+        <div class="card mb-3 mt-3" id="product-card" >
 
           <img src="{{ y.img.url }}" class="card-img-top" alt="image" >
 
@@ -64,6 +64,7 @@
     </div>
 
     {% endfor %}
+    </div>
 </div>
 
     <div class="pagination mb-3 mt-1">
