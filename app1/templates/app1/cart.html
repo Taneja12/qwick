@@ -3,7 +3,7 @@
                   <h1 style="text-align: center; margin-top: 10px;">{{cart}}</h1>
                   <div class="row">
                       <h1 style="text-align: center;margin-top: 20px;">{{k}}</h1>
-                      <div class="container1" style="display: flex;flex-direction: row;justify-content:right;">
+                      <div class="container1" style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
                           {% for y in p %}
 
 
@@ -63,4 +63,13 @@
 
                   </div>
                   </div>
+                  <style>
+                    @media (max-width: 768px) {
+                      .container.text-center {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      }
+                    }
+                  </style>
 
