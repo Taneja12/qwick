@@ -67,15 +67,16 @@
             <!-- Container wrapper -->
             <div class="container-fluid">
                 <!-- Toggle button -->
+                <a class="navbar-brand" href="home">
+                    <img src="/media/images/DT1.png" height="55" alt="" loading="lazy" />
+                </a>
                 <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#sidebarMenu"
                     aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fas fa-bars"></i>
                 </button>
 
                 <!-- Brand -->
-                <a class="navbar-brand" href="home">
-                    <img src="/media/images/DT1.png" height="55" alt="" loading="lazy" />
-                </a>
+               
                 <!-- Search form -->
                 <form class="d-flex" role="search" method="post" action="search">
                     {% csrf_token %}
