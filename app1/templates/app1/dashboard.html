@@ -81,7 +81,7 @@
                     {% csrf_token %}
                     <input class="form-control me-2" type="search" placeholder="eg. burger, beverages"
                         aria-label="Search" name="search1" id="field1"
-                        style="margin-left: 10px;border: 1px solid;border-radius: 34px;height: 40px;width: 250px;">
+                        style="margin-left: 10px;border-radius: 34px;">
 
                     <!-- <button class="btn " type="submit">Search</button> -->
                 </form>
@@ -115,7 +115,7 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="#">My profile</a></li>
                             <li><a class="dropdown-item" href="settings">Settings</a></li>
-                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
                     </li>
                 </ul>
