@@ -5,33 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'app1/home.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 
-<body>
+<body style="background-color: burlywood;;">
     <!-- Navbar Starts HEre  -->
     {% include 'app1/navbar.html' %}
     <!-- Navbar Ends Here -->
-    <div style=" text-align: center;">
-        <h3>{{ o }}</h3>
-        <h1 class="alert alert-secondary text-center">User Authentication Form</h1>
+
+    <div style=" text-align: center;" >
+        {% if o %}
+        <h3 class="alert alert-danger">{{ o }}</h3>
+        {% endif%}
+        <h1  style="background-color: burlywood; margin-top: 30px;">LOGIN</h1>
         <h4>{{ k }}</h4>
         <h4>{{ d }}</h4>
+    <h1>{{ log }}</h1>
+
     </div>
 
-    <div class="container text-center">
+    <div class="container text-center" style=" background-color: rgb(252, 232, 196);width: 300px;border-radius: 50px;height: 270px;">
         <form method="post" action="">
             <br>
             {% csrf_token %}
             {{ form.as_p }}
-            <button class="btn btn-primary">Login</button>
+            <button class="btn, btn1" style="margin-top: 20px;">Login</button>
         </form>
+    </div>
+    <div style="display: flex; justify-content: center; margin-top: 10px;">
+        <a>Don't have account?&nbsp</a>
+        <a href="{% url 'signup' %}">Sign Up</a></a>
     </div>
     <br>
     <div>
         <!-- Footer Starts HEre  -->
-
+        
         {% include 'app1/footer.html' %}
         <!-- Footer Ends Here -->
     </div>

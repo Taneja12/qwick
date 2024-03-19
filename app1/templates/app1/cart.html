@@ -1,8 +1,13 @@
                 <!-- Cart Section Starts Here  -->
                 <div class="container">
-                  <h1 style="text-align: center; margin-top: 10px;">{{cart}}</h1>
+                 
                   <div class="row">
+                    {%if cart%}
+                    <h1 style="text-align: center; margin-top: 20px;">{{cart}}</h1>
+                    {%endif%}
+                    {% if k %}
                       <h1 style="text-align: center;margin-top: 20px;">{{k}}</h1>
+                    {% endif %}
                       <div class="container1" style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
                           {% for y in p %}
 
