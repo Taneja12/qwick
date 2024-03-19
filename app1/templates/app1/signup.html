@@ -12,7 +12,25 @@
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
 </head>
+<style>
+     input[type="text"],
+    input[type="password"] {
+        width:20%;
+        padding: 5px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    button[type="submit"] {
+        width: 30%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
+</style>
 <body style="background-color: burlywood;">
 
     {% include 'app1/navbar.html' %}
@@ -21,11 +39,11 @@
 
         <h1 style=" margin-top: 30px;">SIGNUP</h1>
         {% if y %}
-        <h3>{{ y }}</h3>
+        <h3  style=" margin-top: 20px;">{{ y }}</h3>
         {% endif %}
 
         {% if z %}
-        <h3>{{ z }}</h3>
+        <h3 style=" margin-top: 20px;">{{ z }}</h3>
         {% endif %}
     </div>
 
@@ -37,7 +55,7 @@
 
             {{ form.as_p }}
             <div style="text-align: center;">
-            <button class="btn, btn1">Sign Up</button>
+            <button class="btn, btn1" type="submit">Sign Up</button>
                 </div>
         </form>
 
