@@ -28,7 +28,7 @@
     </div>
 
     <div class="container text-center" style=" background-color: rgb(252, 232, 196);width: 300px;border-radius: 50px;height: 270px;display: flexbox;">
-        <form method="post" action="">
+        <form method="post" action="" style="display: flex; flex-direction: column; width: auto;">
             <br>
             {% csrf_token %}
             {{ form.as_p }}
