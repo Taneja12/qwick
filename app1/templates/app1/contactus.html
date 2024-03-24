@@ -11,14 +11,14 @@
     integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 <style>
-  input[type="text"]{
-      width: 50%;
-      padding: 5px;
-      margin: 5px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-  }
+     input[type="text"]{
+        width: 50%;
+        padding: 5px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
   button[type="submit"] {
       width: 50%;
@@ -34,7 +34,7 @@
     <h1 tyle="background-color: burlywood; margin-top: 30px;">Contact Us</h1>
   </div>
 
-  <div class="container text-center" style="background-color: rgb(252, 232, 196);width: 40%;border-radius: 50px;height: 270px;display: flexbox;padding: 20px;">
+  <div class="container text-center" style="background-color: rgb(252, 232, 196);width: 300px;border-radius: 50px;height: 270px;display: flexbox;padding: 20px;">
     <form action="contactus/add_record" method="post" style="display: flex; flex-direction: column;">
       {% csrf_token %}
       {{ form.as_p}}
