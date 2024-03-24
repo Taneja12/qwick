@@ -57,7 +57,7 @@ ROOT_URLCONF = 'Qwicky.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'app1/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

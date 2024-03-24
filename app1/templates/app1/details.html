@@ -54,14 +54,17 @@
 
             <p style="font-size: 30px; font-weight: bold; text-align: center;">Price: ₹{{ z.price }} /-</p>
 
-            <div class="container" style="text-align: center;">
-              <form method="post" action="{% url 'cart' %}" style="display: inline-block; margin-right: 10px;">
+            <div class="container" style="display: flex;justify-content:center;flex-direction:row;">
+              <form method="post" action="{% url 'cart' %}">
                 {% csrf_token %}
-                <button class="btn, btn1" value="{{z.Product_id}}" id="c_btn" name="c_btn" style="padding: 10px;width: 150px;">ADD TO CART</button>
+                <input type="hidden" name="item_id" value="{{ z.Product_id }}">
+                <!-- Disable Add to Cart button if product is in cart -->
+                <button class="btn, btn1" type="submit" >ADD TO CART</button>
+
               </form>
               <form method="post" action="{% url 'add_wishlists' %}" style="display: inline-block;">
                 {% csrf_token %}
-                <button class="btn, btn1" value="{{z.Product_id}}" id="w_btn" name="w_btn" style="padding: 10px;width: 100px;">Wishlist</button>
+                <button class="btn, btn1" value="{{z.Product_id}}" id="w_btn" name="w_btn" style="margin-left: 10px;">Wishlist</button>
               </form>
             </div>
           </div>

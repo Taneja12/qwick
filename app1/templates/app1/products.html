@@ -8,7 +8,7 @@
   <div class="row">
     <div style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
 
-      {% for y in page_obj %}
+      {% for product in page_obj %}
 
       <div class="col">
 
@@ -16,33 +16,32 @@
 
           <div class="card mb-3 mt-3" id="product-card">
 
-            <img src="{{ y.img.url }}" class="card-img-top" alt="image">
+            <img src="{{ product.img.url }}" class="card-img-top" alt="image">
 
             <div class="card-body">
 
-              <p class="card-title">{{ y.Title }}</p>
+              <p class="card-title">{{ product.Title }}</p>
 
-              <!--<p class="card-text">#{{ y.product_id}}</p> -->
+              <p style="font-weight: bold;font-size: 20px;">Price : {{ product.price }}/-</p>
 
-              <p style="font-weight: bold;font-size: 20px;">Price : {{y.price}}/-</p>
-
-              <p>{{y.Description|slice:":80"}}...</p>
+              <p>{{ product.Description|slice:":80" }}...</p>
 
               <form method="post" action="{% url 'cart' %}">
-
                 {% csrf_token %}
-
-                <button class="btn, btn1" value="{{y.Product_id}}" id="c_btn" name="c_btn" type="submit">ADD TO CART</button>
-                <a class="btn" href="{{y.id}}">More</a>
+                <input type="hidden" name="item_id" value="{{ product.Product_id }}">
+                <!-- Disable Add to Cart button if product is in cart -->
+                <button class="btn, btn1" type="submit" >ADD TO CART</button>
+                <a class="btn" href="{% url 'details' product.id %}">More</a>
 
               </form>
 
               <form method="post" action="{% url 'add_wishlists' %}">
 
                 {% csrf_token %}
-
-                <button class="btn, btn1" value="{{y.Product_id}}" id="w_btn" name="w_btn" style="margin-top: 5px; width: 80%">Wishlist</button>
-
+  
+                <button class="btn, btn1" value="{{product.Product_id}}" id="w_btn" name="w_btn"
+                  style="margin-top: 5px; width: 80%">Wishlist</button>
+  
               </form>
 
             </div>
@@ -79,7 +78,6 @@
     </span>
   </div>
 </div>
-</div>
 
 <style>
   @media (max-width: 768px) {
@@ -90,5 +88,3 @@
     }
   }
 </style>
-
-
