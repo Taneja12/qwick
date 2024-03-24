@@ -210,7 +210,7 @@ def show_cart(request):
     if not cart or not cart.c_details:
         return render(request, 'app1/dashboard.html', {'k': 'Add items to Cart'})
   # Render the template with the cart, products, and total bill
-    return render(request, "app1/dashboard.html", {'p': cart_products, 'cart':'YOUR CART', 'bill': total_bill})   
+    return render(request, "app1/dashboard.html", {'p': cart_products, 'cart':'YOUR CART', 'bill': total_bill,'c':cart.c_details})   
 
 
 
