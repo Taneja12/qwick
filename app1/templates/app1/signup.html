@@ -14,8 +14,9 @@
 </head>
 <style>
      input[type="text"],
-    input[type="password"] {
-        width:30%;
+    input[type="password"],
+    input[type="email"]{
+        width:200px;
         padding: 5px;
         margin: 5px 0;
         border: 1px solid #ccc;
@@ -36,20 +37,16 @@
     {% include 'app1/navbar.html' %}
 
     <div class="container text-center">
-
+        
         <h1 style=" margin-top: 30px;">SIGNUP</h1>
-        {% if y %}
-        <h3  style=" margin-top: 20px;">{{ y }}</h3>
-        {% endif %}
-
-        {% if z %}
-        <h3 style=" margin-top: 20px;">{{ z }}</h3>
+        {% if error_message %}
+        <p class="error" style=" margin-top: 20px;">{{ error_message }}</p>
         {% endif %}
     </div>
 
     <div class="container" style="display: flex;justify-content: center;">
 
-        <form method="post" action="" style="background-color: rgb(252, 232, 196); padding: 20px; border-radius: 50px;width: 75%;">
+        <form method="post" action="" style="background-color: rgb(252, 232, 196); padding: 20px; border-radius: 50px;width: 280px;">
 
             {%csrf_token%}
 

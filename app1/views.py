@@ -5,13 +5,12 @@ from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.paginator import Paginator
-from .forms import ContactForm
+from .forms import ContactForm,CustomUserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.urls import reverse
-
+from .decorators import unauthenticated_user 
 
 
 
@@ -106,21 +105,27 @@ def show(request):
     myproducts = Product.objects.all()
     return render(request,"test1/search.html",{'x':myproducts})
 
+@unauthenticated_user
 def signupuser(request):
     if request.method == 'GET':
-        return render(request,'app1/signup.html',{'form':UserCreationForm()})
+        return render(request, 'app1/signup.html', {'form': CustomUserCreationForm()})
     else:
-        if(request.POST['password1'] == request.POST['password2']):
-            try:
-                user = User.objects.create_user(username=request.POST['username'], password=request.POST['password1'])
-                user.save()
-                return redirect('login')
-            except IntegrityError:
-                return render(request,'app1/signup.html',{'form':UserCreationForm(),'y':'Username already taken'})
-            
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['password1'] == form.cleaned_data['password2']:
+                try:
+                    user = form.save()
+                    login(request, user)
+                    return redirect('login')
+                except IntegrityError:
+                    return render(request, 'app1/signup.html', {'form': CustomUserCreationForm(), 'error_message': 'Username already taken'})
+            else:
+                return render(request, 'app1/signup.html', {'form': CustomUserCreationForm(), 'error_message': 'Passwords do not match'})
         else:
-            return render(request,'app1/signup.html',{'form':UserCreationForm(),'z':'Passwords Unmatched'})
-
+            # Extract the specific error message from the form errors
+            error_message = form.errors.get_json_data()['password2'][0]['message']
+            return render(request, 'app1/signup.html', {'form': form, 'error_message': error_message})
+        
 def loginuser(request):
     if request.method == 'GET':
         return render(request,'app1/login.html',{'form':AuthenticationForm()})
