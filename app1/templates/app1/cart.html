@@ -8,10 +8,12 @@
     <h1 style="text-align: center;margin-top: 20px;">{{ k }}</h1>
     {% endif %}
     <div class="container1" style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
+      {% load cart_extras %}
       {% for y in p %}
       <div class="col">
         <div class="container text-center" style="background-color: burlywood; padding: 15px; border-radius: 15px;">
-          <div class="card mb-3 mt-3" id="product-card" style="width: 18rem; background-color: #fce8c4; border-radius: 15px; align-items: center;">
+          <div class="card mb-3 mt-3" id="product-card"
+            style="width: 18rem; background-color: #fce8c4; border-radius: 15px; align-items: center;">
             <img src="{{ y.img.url }}" class="card-img-top" alt="image">
             <div class="card-body">
               <p class="card-title" style="font-size: 1.25rem; font-weight: bold;">{{ y.Title }}</p>
@@ -21,8 +23,9 @@
                 <form method="post" action="{% url 'update_cart' %}">
                   {% csrf_token %}
                   <input type="hidden" name="item_id" value="{{ y.Product_id }}">
-                  <input type="number" name="quantity" id="quantity" value="1" min="1" style="width: 70px; margin-right: 10px;text-align:center;">
-                  <button type="submit" class="btn, btn1" >Update Quantity</button>
+                  <input type="number" name="quantity" id="quantity" value="{{ c|get_quantity:y.Product_id }}" min="1"
+                    style="width: 70px; margin-right: 10px;text-align:center;">
+                  <button type="submit" class="btn, btn1">Update Quantity</button>
                 </form>
               </div>
               <div style="display: flex; flex-direction: row;justify-content: center; margin-top: 5px;">
@@ -37,6 +40,7 @@
         </div>
       </div>
       {% endfor %}
+
     </div>
   </div>
 </div>
