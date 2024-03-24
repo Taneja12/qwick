@@ -9,6 +9,9 @@ from .forms import ContactForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 
 
 
@@ -19,7 +22,10 @@ def home(request):
     paginator = Paginator(myproduct, 3)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request,'app1/home.html',{'page_obj':page_obj})
+    user_cart = Cart.objects.filter(username=request.user.username).first()
+    cart_items = set(user_cart.c_details.keys()) if user_cart and user_cart.c_details else set()
+    print(cart_items)
+    return render(request,'app1/home.html',{'page_obj':page_obj, 'cart_items': cart_items})
 
 def  allproducts(request):
     if request.method == 'GET':
@@ -140,25 +146,137 @@ def logoutuser(request):
 def settings(request):
     return render(request,"app1/settings.html")
 
+
 @login_required
 def add_to_cart(request):
     if request.method == 'POST':
         user = request.user.username
-        item_id = request.POST.get('c_btn')
+        item_id = request.POST.get('item_id')
+        quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
 
         # Check if the user already has items in the cart
         cart, created = Cart.objects.get_or_create(username=user)
 
-        # If the item is not already in the cart, add it
-        if cart.c_details:
-            if item_id not in cart.c_details.split(', '):
-                cart.c_details += ', ' + item_id
-        else:
-            cart.c_details = item_id
+        # Ensure that c_details is initialized as a dictionary
+        if not isinstance(cart.c_details, dict):
+            cart.c_details = {}
 
+        # If the item is not already in the cart, add it
+        if str(item_id) not in cart.c_details:
+            cart.c_details[str(item_id)] = quantity
+        else:
+            cart.c_details[str(item_id)] += quantity
         cart.save()
 
     return redirect('show_cart')
+
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from .models import Cart, Product
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def show_cart(request):
+    # Get the username of the current user
+    user = request.user.username
+    # Get the cart for the current user
+    cart = Cart.objects.filter(username=user).first()
+    # Initialize total bill
+    total_bill = 0
+    # If cart exists and has cart details
+    if cart and cart.c_details:
+        # Get cart items
+        cart_items = [int(item_id) for item_id in cart.c_details.keys()]
+        # Ensure that cart_items is not an empty list
+        if cart_items:
+            # Filter products based on the item IDs
+            cart_products = Product.objects.filter(Product_id__in=cart_items)
+            # Fetch all products
+            products = Product.objects.all()
+            # Get the items in the cart
+            items = cart.c_details
+            # Iterate over items in the cart
+            for item_id, quantity in items.items():
+                # Get the product corresponding to the item in the cart
+                product = products.filter(Product_id=item_id).first()
+                # If product exists
+                if product:
+                    subtotal = product.price * quantity
+                    # Add the previous product bill to the total bill
+                    total_bill += subtotal
+               
+    # If cart is empty or no cart details found
+    if not cart or not cart.c_details:
+        return render(request, 'app1/dashboard.html', {'k': 'Add items to Cart'})
+  # Render the template with the cart, products, and total bill
+    return render(request, "app1/dashboard.html", {'p': cart_products, 'cart':'YOUR CART', 'bill': total_bill})   
+
+
+
+@login_required
+def remove_item_cart(request):
+    if request.method == 'POST':
+        username = request.user.username
+        item_id_to_remove = request.POST.get('rc_btn')
+
+        # Retrieve the cart instance for the current user
+        cart = Cart.objects.get(username=username)
+
+        # Retrieve the cart details dictionary
+        cart_details = cart.c_details
+
+        # Remove the specified item ID from the cart details
+        if str(item_id_to_remove) in cart_details:
+            del cart_details[str(item_id_to_remove)]
+
+            # Update the cart details and save the instance
+            cart.c_details = cart_details
+            cart.save()
+
+        # Redirect to the show_cart page
+        return redirect('show_cart')
+
+    return render(request, 'app1/dashboard.html')
+
+
+
+@login_required
+def update_cart(request):
+    if request.method == 'POST':
+        user = request.user.username
+        item_id = request.POST.get('item_id')
+        cart = Cart.objects.get(username=user)
+
+        cart_details = cart.c_details
+        
+        new_quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
+
+        # Update the quantity of the specified item in the cart
+        cart_details[str(item_id)] = new_quantity
+        
+        # Save the updated cart details
+        cart.c_details = cart_details
+        cart.save()
+        
+            
+    return redirect('show_cart')
+
+def calculate_bill(request):
+    # Get the username of the current user
+    user = request.user.username
+    cart = Cart.objects.get(username=user)
+    products = Product.objects.all()
+    items = cart.c_details
+    total_bill = 0
+    for item_id, quantity in items.items():
+        product = products.filter(Product_id=item_id).first()
+        if product:
+            subtotal = product.price * quantity
+            total_bill += subtotal
+    total_bill = round(total_bill, 2)
+    print("Total Bill:", total_bill)
+    return render(request, 'app1/dashboard.html',{'bill':total_bill})
 
 
 
@@ -196,23 +314,7 @@ def show_wishlists(request):
     # If cart is empty or no cart details found
     return render(request, 'app1/dashboard.html', {'l': 'Add items to Wishlist'})
 
-@login_required
-def show_cart(request):
-    user = request.user.username
-    cart = Cart.objects.filter(username=user).first()
 
-    if cart and cart.c_details:
-        cart_items = [int(item_id) for item_id in cart.c_details.split(', ') if item_id]
-
-        # Ensure that cart_items is not an empty list
-        if cart_items:
-            # Filter products based on the item IDs
-            cart_products = Product.objects.filter(Product_id__in=cart_items)
-
-            return render(request, "app1/dashboard.html", {'p': cart_products, 'cart':'YOUR CART'})
-    
-    # If cart is empty or no cart details found
-    return render(request, 'app1/dashboard.html', {'k': 'Add items to Cart'})
 
 def remove_item_wishlist(request):
     if request.method == 'POST':
@@ -234,31 +336,7 @@ def remove_item_wishlist(request):
     return render(request, 'app1/dashboard.html')  # You might want to handle GET requests differently
 
 
-def remove_item_cart(request):
-    if request.method == 'POST':
-        username = request.user.username
-        item_id_to_remove = request.POST.get('rc_btn')
 
-        # Retrieve the cart instance for the current user
-        z = Cart.objects.get(username=username)
-
-        # Split the cart details string into a list of items
-        c_items = z.c_details.split(', ')
-
-        # Remove the specified item ID from the list
-        c_items.remove(str(item_id_to_remove))
-
-        # Join the modified list back into a string
-        updated_cart_details = ', '.join(c_items)
-
-        # Update the cart details and save the instance
-        z.c_details = updated_cart_details
-        z.save()
-
-        # Redirect to the show_cart page
-        return redirect('show_cart')
-
-    return render(request, 'app1/dashboard.html')
 
 
     

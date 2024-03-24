@@ -108,12 +108,12 @@
                 <p>{{y.Description|slice:":80"}}...</p>
 
                 <form method="post" action="{% url 'cart' %}">
-
                   {% csrf_token %}
-
-                  <button class="btn, btn1" value="{{y.Product_id}}" id="c_btn" name="c_btn">ADD TO CART</button>
-                  <a class="btn" href="{{y.id}}">More</a>
-
+                  <input type="hidden" name="item_id" value="{{ y.Product_id }}">
+                  <!-- Disable Add to Cart button if product is in cart -->
+                  <button class="btn, btn1" type="submit" >ADD TO CART</button>
+                  <a class="btn" href="{% url 'details' y.id %}">More</a>
+  
                 </form>
 
 

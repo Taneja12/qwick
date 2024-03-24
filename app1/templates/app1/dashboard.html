@@ -76,21 +76,20 @@
                 </button>
 
                 <!-- Brand -->
-               
+
                 <!-- Search form -->
                 <form class="d-flex" role="search" method="post" action="search">
                     {% csrf_token %}
                     <input class="form-control me-2" type="search" placeholder="eg. burger, beverages"
-                        aria-label="Search" name="search1" id="field1"
-                        style="margin-left: 10px;border-radius: 34px;">
+                        aria-label="Search" name="search1" id="field1" style="border-radius: 34px;">
 
                     <!-- <button class="btn " type="submit">Search</button> -->
                 </form>
 
                 <!-- Right links -->
-                <ul class="navbar-nav ms-auto d-flex flex-row">
+                <!-- <ul class="navbar-nav ms-auto d-flex flex-row"> -->
                     <!-- Notification dropdown -->
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" href="#"
                             id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-bell"></i>
@@ -103,12 +102,12 @@
                                 <a class="dropdown-item" href="#">Something else here</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
 
 
 
                     <!-- Avatar -->
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center" href="#"
                             id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
                             <img src="media/images/user.png" class="rounded-circle" height="27" alt="" loading="lazy" />
@@ -120,7 +119,7 @@
                         </ul>
                     </li>
                 </ul>
-            </div>
+            </div> -->
             <!-- Container wrapper -->
 
         </nav>
@@ -142,7 +141,8 @@
                         {% if l %}
                         <h1 style="text-align: center;margin-top: 20px;">{{l}}</h1>
                         {% endif %}
-                        <div class="container3" style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
+                        <div class="container3"
+                            style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
                             {% for y in o %}
                             <div class="col">
 
@@ -164,22 +164,20 @@
                                             <p style="font-weight: bold;font-size: 20px;">Price : {{y.price}}/-</p>
 
                                             <p>{{y.Description|slice:":80"}}...</p>
-                                            <div style="display: flex; flex-direction: row; justify-content: center;">
-                                                <form method="post" action="{% url 'add_wishlists' %}">
-
+                                            <div style="display: flex; flex-direction: column; justify-content:center;">
+                                                <form method="post" action="{% url 'cart' %}">
                                                     {% csrf_token %}
-
-
-                                                    <a class="btn" href="{{y.id}}">More</a>
-
-
-
-                                                </form>
+                                                    <input type="hidden" name="item_id" value="{{ y.Product_id }}">
+                                                    <!-- Disable Add to Cart button if product is in cart -->
+                                                    <button class="btn, btn1" type="submit" >ADD TO CART</button>
+                                                    <a class="btn" href="{% url 'details' y.id %}">More</a>
+                                    
+                                                  </form>
 
                                                 <form method="post" action="{% url 'remove_item_wishlist' %}">
                                                     {% csrf_token %}
                                                     <button value="{{y.Product_id}}" id="rw_btn" name="rw_btn"
-                                                        class="btn, btn1">Remove</button>
+                                                        class="btn, btn1" style="margin-top: 10px;">Remove</button>
                                                 </form>
                                             </div>
 
@@ -199,19 +197,25 @@
                     </div>
                     <style>
                         @media (max-width: 768px) {
-                          .container.text-center {
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                          }
+                            .container.text-center {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            }
                         }
-                      </style>
+                    </style>
 
                 </div>
 
 
                 {% include 'app1/cart.html'%}
-
+                {% if bill %}
+                <div style="  display: flex;justify-content: center;">
+                    <p
+                        style="font-weight: bold; font-size: 1.2em; background-color: #fce8c4; color: #333; padding: 15px; border-radius: 8px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); text-align: center;">
+                        Total Bill: {{ bill }}</p>
+                </div>
+                {% endif %}
 
             </section>
 

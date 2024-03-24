@@ -1,80 +1,51 @@
-                <!-- Cart Section Starts Here  -->
-                <div class="container">
-                 
-                  <div class="row">
-                    {%if cart%}
-                    <h1 style="text-align: center; margin-top: 20px;">{{cart}}</h1>
-                    {%endif%}
-                    {% if k %}
-                      <h1 style="text-align: center;margin-top: 20px;">{{k}}</h1>
-                    {% endif %}
-                      <div class="container1" style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
-                          {% for y in p %}
-
-
-                          <div class="col">
-
-                              <div class="container text-center" style="background-color: burlywood; ">
-
-                                  <div class="card mb-3 mt-3" id="product-card" style="width: 18rem;
-                              background-color: #fce8c4;
-                              border-radius: 25px;
-                              align-items: center;">
-
-                                      <img src="{{ y.img.url }}" class="card-img-top" alt="image">
-
-                                      <div class="card-body">
-
-                                          <p class="card-title">{{ y.Title }}</p>
-
-                                          <!--<p class="card-text">#{{ y.product_id}}</p> -->
-
-                                          <p style="font-weight: bold;font-size: 20px;">Price : {{y.price}}/-</p>
-
-                                          <p>{{y.Description|slice:":80"}}...</p>
-                                          <div class="container2"
-                                              style="display: flex; flex-direction: row; justify-content: center;">
-
-                                              <form method="post" action="{% url 'cart' %}">
-
-                                                  {% csrf_token %}
-
-
-                                                  <a class="btn" href="{{y.id}}">More</a>
-
-
-
-                                              </form>
-
-                                              <form method="post" action="{% url 'remove_item_cart' %}">
-                                                  {% csrf_token %}
-                                                  <button value="{{y.Product_id}}" id="rc_btn" name="rc_btn"
-                                                      class="btn, btn1">Remove</button>
-                                              </form>
-                                          </div>
-
-
-
-                                      </div>
-
-                                  </div>
-
-                              </div>
-
-                          </div>
-                          {% endfor %}
-
-                      </div>
-
-                  </div>
-                  </div>
-                  <style>
-                    @media (max-width: 768px) {
-                      .container.text-center {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                      }
-                    }
-                  </style>
-
+<!-- Cart Section Starts Here -->
+<div class="container">
+  <div class="row">
+    {% if cart %}
+    <h1 style="text-align: center; margin-top: 20px;">{{ cart }}</h1>
+    {% endif %}
+    {% if k %}
+    <h1 style="text-align: center;margin-top: 20px;">{{ k }}</h1>
+    {% endif %}
+    <div class="container1" style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%;">
+      {% for y in p %}
+      <div class="col">
+        <div class="container text-center" style="background-color: burlywood; padding: 15px; border-radius: 15px;">
+          <div class="card mb-3 mt-3" id="product-card" style="width: 18rem; background-color: #fce8c4; border-radius: 15px; align-items: center;">
+            <img src="{{ y.img.url }}" class="card-img-top" alt="image">
+            <div class="card-body">
+              <p class="card-title" style="font-size: 1.25rem; font-weight: bold;">{{ y.Title }}</p>
+              <p style="font-size: 1rem; font-weight: bold;">Price: {{ y.price }}/-</p>
+              <p style="font-size: 1rem;">{{ y.Description|slice:":80" }}...</p>
+              <div class="container2" style="display: flex; flex-direction: row;justify-content: center;">
+                <form method="post" action="{% url 'update_cart' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="item_id" value="{{ y.Product_id }}">
+                  <input type="number" name="quantity" id="quantity" value="1" min="1" style="width: 70px; margin-right: 10px;text-align:center;">
+                  <button type="submit" class="btn, btn1" >Update Quantity</button>
+                </form>
+              </div>
+              <div style="display: flex; flex-direction: row;justify-content: center; margin-top: 5px;">
+                <a href="{% url 'details' y.id %}" class="btn" style="margin-right: 10px;">More</a>
+                <form method="post" action="{% url 'remove_item_cart' %}">
+                  {% csrf_token %}
+                  <button value="{{ y.Product_id }}" id="rc_btn" name="rc_btn" class="btn, btn1">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<style>
+  @media (max-width: 768px) {
+    .container.text-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

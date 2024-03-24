@@ -27,11 +27,14 @@ class Contact(models.Model):
 
 
 class Cart(models.Model):
-     username  = models.CharField(max_length = 30)
-     c_details = models.CharField(max_length = 300, null=True)
+    username = models.CharField(max_length=30)
+    c_details = models.JSONField(default=dict)
 
-     def __str__(self):
-          return self.username
+    def __str__(self):
+        return self.username
+
+    def cart_contents(self):
+        return self.c_details
      
 class Wishlistt(models.Model):
     user = models.CharField(max_length=30)  # You might want to use a ForeignKey to the User model if you have a custom user model
