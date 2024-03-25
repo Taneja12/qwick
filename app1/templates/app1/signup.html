@@ -13,16 +13,17 @@
 
 </head>
 <style>
-     input[type="text"],
+    input[type="text"],
     input[type="password"],
-    input[type="email"]{
-        width:200px;
+    input[type="email"] {
+        width: 200px;
         padding: 5px;
         margin: 5px 0;
         border: 1px solid #ccc;
         border-radius: 4px;
         box-sizing: border-box;
     }
+
     button[type="submit"] {
         width: 50%;
         padding: 10px;
@@ -30,30 +31,31 @@
         border-radius: 4px;
         cursor: pointer;
     }
-
 </style>
+
 <body style="background-color: burlywood;">
 
     {% include 'app1/navbar.html' %}
 
     <div class="container text-center">
-        
+
         <h1 style=" margin-top: 30px;">SIGNUP</h1>
-        {% if error_message %}
+        <!-- {% if error_message %}
         <p class="error" style=" margin-top: 20px;">{{ error_message }}</p>
-        {% endif %}
+        {% endif %} -->
     </div>
 
-    <div class="container" style="display: flex;justify-content: center;">
+    <div class="container" style="display: flex;justify-content: center;flex-direction: row;">
 
-        <form method="post" action="" style="background-color: rgb(252, 232, 196); padding: 20px; border-radius: 50px;width: 280px;">
+        <form method="post" action=""
+            style="background-color: rgb(252, 232, 196); padding: 20px; border-radius: 50px;width: 450px;margin: 0 20px;">
 
             {%csrf_token%}
 
             {{ form.as_p }}
             <div style="text-align: center;">
-            <button class="btn, btn1" type="submit">Sign Up</button>
-                </div>
+                <button class="btn, btn1" type="submit">Sign Up</button>
+            </div>
         </form>
 
     </div>

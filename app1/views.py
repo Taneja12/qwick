@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from .decorators import unauthenticated_user 
-
+from django.contrib import messages
 
 
 # Create your views here.
@@ -79,8 +79,46 @@ def add_record(request):
             form.save()
             return redirect('home')
 
+@login_required
 def dashboard(request):
-    return render(request,"app1/dashboard.html")
+    user = request.user
+    context = {
+        'first_name': user.first_name,
+        'email': user.email,
+        'username':user.username
+    }
+    return render(request, 'app1/dashboard.html',context)
+    
+@login_required
+def profile(request):
+    user = request.user
+    context = {
+        'first_name': user.first_name,
+        'email': user.email,
+        'username': user.username
+    }
+    print(user)
+    return render(request, 'app1/dashboard.html',context)
+
+
+@login_required
+def edit_profile(request):
+    user = request.user
+    if request.method == 'POST':
+        # Get form data
+        first_name = request.POST.get('first_name')
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        # Update user profile
+        user.first_name = first_name
+        user.email = email
+        user.save()
+        messages.success(request, 'Your profile has been updated successfully.')  # Display success message
+        return redirect('dashboard')  # Redirect to profile page after updating profile
+    context = {
+        'user': user
+    }
+    return render(request, 'app1/dashboard.html', context)
 
 def search(request):
     # query = request.GET['query']
@@ -152,6 +190,7 @@ def settings(request):
     return render(request,"app1/settings.html")
 
 
+
 @login_required
 def add_to_cart(request):
     if request.method == 'POST':
@@ -175,11 +214,6 @@ def add_to_cart(request):
 
     return redirect('show_cart')
 
-
-from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Cart, Product
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def show_cart(request):
