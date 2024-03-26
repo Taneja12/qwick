@@ -1,7 +1,7 @@
 from django import forms
 from .models import Contact
 
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
 
@@ -12,27 +12,36 @@ class ContactForm(forms.ModelForm):
         fields = [
             "email","subject","message",
         ]
-
+        labels = {
+            'email': '',
+            'subject': '',
+            'message': '',
+        }
+        widgets = {
+                    'email' : forms.EmailInput(attrs={'placeholder':'Email'}),
+                    'subject': forms.TextInput(attrs={'placeholder': 'Subject','class': 'custom-width'}),
+                    'message': forms.Textarea(attrs={'placeholder': 'Message','rows': 5, 'cols': 25}),
+                }
 
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(label='Email')  # Define the email field directly in the class
-    first_name = forms.CharField(max_length=30, required=True, label="Name")
+    email = forms.EmailField(label='', widget=forms.EmailInput(attrs={'placeholder': 'Enter your email'}))
+    first_name = forms.CharField(max_length=30, required=True, label='', widget=forms.TextInput(attrs={'placeholder': 'Enter your name'}))
+    username = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Enter username'}))
+    password1 = forms.CharField(label='', widget=forms.PasswordInput(attrs={'placeholder': 'Enter password'}))
+    password2 = forms.CharField(label='', widget=forms.PasswordInput(attrs={'placeholder': 'Confirm password'}))
+    
     class Meta:
         model = User
-        fields = ( "username","first_name", "email", "password1", "password2")  # Include email field in Meta
-
+        fields = ("username", "first_name", "email", "password1", "password2")
+        
     def __init__(self, *args, **kwargs):
-        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['password1'].help_text = None
         self.fields['password2'].help_text = None
         self.fields['username'].help_text = None
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.first_name = self.cleaned_data['first_name']
-        if commit:
-            user.save()
-        return user
 
-
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    password = forms.CharField(label='', widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))

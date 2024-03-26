@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.paginator import Paginator
-from .forms import ContactForm,CustomUserCreationForm
+from .forms import ContactForm,CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
@@ -166,7 +166,7 @@ def signupuser(request):
         
 def loginuser(request):
     if request.method == 'GET':
-        return render(request,'app1/login.html',{'form':AuthenticationForm()})
+        return render(request,'app1/login.html',{'form':CustomAuthenticationForm()})
     else:
         username = request.POST["username"]
         password = request.POST["password"]
@@ -175,7 +175,7 @@ def loginuser(request):
             login(request, user)
             return redirect('home')
         else:
-            return render(request,'app1/login.html',{'form':AuthenticationForm(),'k':'Invalid Username or Password!'})
+            return render(request,'app1/login.html',{'form':CustomAuthenticationForm(),'k':'Invalid Username or Password!'})
 
 
 def logoutuser(request):
@@ -198,6 +198,9 @@ def add_to_cart(request):
         item_id = request.POST.get('item_id')
         quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
 
+        # Remove item from the wishlist
+        Wishlistt.objects.filter(user=user, wl_details__Product_id=item_id).delete()
+
         # Check if the user already has items in the cart
         cart, created = Cart.objects.get_or_create(username=user)
 
@@ -205,14 +208,20 @@ def add_to_cart(request):
         if not isinstance(cart.c_details, dict):
             cart.c_details = {}
 
+        # Get the maximum allowed quantity
+        max_quantity = 10  # Set your maximum quantity limit here
+
         # If the item is not already in the cart, add it
         if str(item_id) not in cart.c_details:
-            cart.c_details[str(item_id)] = quantity
+            cart.c_details[str(item_id)] = min(quantity, max_quantity)  # Limit the quantity
         else:
-            cart.c_details[str(item_id)] += quantity
+            # If the item is already in the cart, update the quantity
+            cart.c_details[str(item_id)] = min(cart.c_details[str(item_id)] + quantity, max_quantity)  # Limit the quantity
         cart.save()
 
     return redirect('show_cart')
+
+
 
 
 @login_required
@@ -290,6 +299,13 @@ def update_cart(request):
         cart_details = cart.c_details
         
         new_quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
+        
+        # Get the maximum allowed quantity (you can adjust this according to your requirements)
+        max_quantity = 10
+
+        # Check if the new quantity exceeds the maximum allowed quantity
+        if new_quantity > max_quantity:
+            new_quantity = max_quantity  # If it exceeds, set it to the maximum allowed quantity
 
         # Update the quantity of the specified item in the cart
         cart_details[str(item_id)] = new_quantity
@@ -298,8 +314,8 @@ def update_cart(request):
         cart.c_details = cart_details
         cart.save()
         
-            
     return redirect('show_cart')
+
 
 def calculate_bill(request):
     # Get the username of the current user
