@@ -16,11 +16,11 @@
     input[type="text"],
     input[type="password"],
     input[type="email"] {
-        width: 200px;
+        width: 250px;
         padding: 5px;
         margin: 5px 0;
         border: 1px solid #ccc;
-        border-radius: 4px;
+        border-radius: 10px;
         box-sizing: border-box;
     }
 
@@ -28,7 +28,7 @@
         width: 50%;
         padding: 10px;
         border: none;
-        border-radius: 4px;
+        border-radius: 10px;
         cursor: pointer;
     }
 </style>
@@ -39,16 +39,16 @@
 
     <div class="container text-center">
 
-        <h1 style=" margin-top: 30px;">SIGNUP</h1>
+        <h1 style=" margin-top: 30px;margin-bottom: 10px;">SIGNUP</h1>
         <!-- {% if error_message %}
         <p class="error" style=" margin-top: 20px;">{{ error_message }}</p>
         {% endif %} -->
     </div>
 
-    <div class="container" style="display: flex;justify-content: center;flex-direction: row;">
+    <div class="container" style="display: flex;justify-content: center;flex-direction: row;text-align: center;">
 
         <form method="post" action=""
-            style="background-color: rgb(252, 232, 196); padding: 20px; border-radius: 50px;width: 450px;margin: 0 20px;">
+            style="background-color: rgb(252, 232, 196); padding: 20px; border-radius: 50px;width: 300px;margin: 0 20px;">
 
             {%csrf_token%}
 
@@ -59,7 +59,10 @@
         </form>
 
     </div>
-
+    <div style="display: flex; justify-content: center; margin-top: 10px;">
+        <a>Already have an account?&nbsp</a>
+        <a href="{% url 'login' %}">Log in</a></a>
+    </div>
     <br>
 
     {% include 'app1/footer.html' %}
