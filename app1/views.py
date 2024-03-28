@@ -190,7 +190,6 @@ def settings(request):
     return render(request,"app1/settings.html")
 
 
-
 @login_required
 def add_to_cart(request):
     if request.method == 'POST':
@@ -198,8 +197,11 @@ def add_to_cart(request):
         item_id = request.POST.get('item_id')
         quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
 
-        # Remove item from the wishlist
-        Wishlistt.objects.filter(user=user, wl_details__Product_id=item_id).delete()
+        # Get the specific item from the wishlist
+        wishlist_item = get_object_or_404(Wishlistt, user=user, wl_details__Product_id=item_id)
+
+        # Remove only the specific item from the wishlist
+        wishlist_item.wl_details.remove(item_id)
 
         # Check if the user already has items in the cart
         cart, created = Cart.objects.get_or_create(username=user)
@@ -220,7 +222,6 @@ def add_to_cart(request):
         cart.save()
 
     return redirect('show_cart')
-
 
 
 
@@ -344,12 +345,18 @@ def add_wishlists(request):
         # Check if the user already has a wishlist
         wishlist, created = Wishlistt.objects.get_or_create(user=user_name)
 
+        # Check if the item is already in the cart
+        if Cart.objects.filter(username=user_name, c_details__in={item_id: 1}).exists():
+            # If the item is in the cart, do not add it to the wishlist
+            return redirect('show_wishlists')  # You may want to redirect to a different page or show a message
+
         # If the item is not already in the wishlist, add it
         product = Product.objects.get(Product_id=item_id)
         if product not in wishlist.wl_details.all():
             wishlist.wl_details.add(product)
 
     return redirect('show_wishlists')
+
 
 @login_required
 def show_wishlists(request):
