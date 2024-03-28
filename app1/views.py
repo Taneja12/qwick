@@ -197,11 +197,12 @@ def add_to_cart(request):
         item_id = request.POST.get('item_id')
         quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
 
-        # Get the specific item from the wishlist
-        wishlist_item = get_object_or_404(Wishlistt, user=user, wl_details__Product_id=item_id)
+        # Try to get the specific item from the wishlist
+        wishlist_item = Wishlistt.objects.filter(user=user, wl_details__Product_id=item_id).first()
 
-        # Remove only the specific item from the wishlist
-        wishlist_item.wl_details.remove(item_id)
+        # If the wishlist item is found, remove it from the wishlist
+        if wishlist_item:
+            wishlist_item.wl_details.remove(item_id)
 
         # Check if the user already has items in the cart
         cart, created = Cart.objects.get_or_create(username=user)
