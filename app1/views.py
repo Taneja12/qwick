@@ -23,7 +23,7 @@ def home(request):
     page_obj = paginator.get_page(page_number)
     user_cart = Cart.objects.filter(username=request.user.username).first()
     cart_items = set(user_cart.c_details.keys()) if user_cart and user_cart.c_details else set()
-    print(cart_items)
+    # print(cart_items)
     return render(request,'app1/home.html',{'page_obj':page_obj, 'cart_items': cart_items})
 
 def  allproducts(request):
