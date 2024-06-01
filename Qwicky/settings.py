@@ -125,13 +125,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.brevo.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_USE_SSL = False
-EMAIL_HOST_USER = '75c4dc001@smtp-brevo.com'
-EMAIL_HOST_PASSWORD = 'J1jmqEw8dzW03AhT'
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

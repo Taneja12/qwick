@@ -10,10 +10,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from .decorators import unauthenticated_user 
+from .decorators import unauthenticated_user
 from django.contrib import messages
-from django.core.mail import EmailMessage, get_connection
-from django.conf import settings
+
 
 # Create your views here.
 
@@ -44,7 +43,7 @@ def  allproducts(request):
         # print(k)
         # return HttpResponse('Hello')
         return render(request, "app1/filter.html", {'x': k,'j':m})
-    
+
 
 def details(request,pid):
     if request.user.is_authenticated:
@@ -63,7 +62,7 @@ def details(request,pid):
             else:
                 return render(request,'app1/login.html',{'form':AuthenticationForm(),'k':'Invalid Username or Password!'})
 
-    
+
 
 def aboutus(request):
     return render(request, 'app1/aboutus.html')
@@ -77,19 +76,6 @@ def add_record(request):
     if request.method=="POST":
         form=ContactForm(request.POST)
         if form.is_valid():
-            with get_connection(  
-                host=settings.EMAIL_HOST, 
-                port=settings.EMAIL_PORT,
-                username=settings.EMAIL_HOST_USER, 
-                password=settings.EMAIL_HOST_PASSWORD, 
-                use_tls=settings.EMAIL_USE_TLS  
-                ) as connection:  
-                subject = request.POST.get("subject")  
-                email_from = settings.EMAIL_HOST_USER  
-                recipient_list = [request.POST.get("email"), ]  
-                message = 'You have a mail from '+email_from+ '\n'+ 'The Message is : '+request.POST.get("message") 
-                EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()  
- 
             form.save()
             return redirect('home')
 
@@ -102,7 +88,7 @@ def dashboard(request):
         'username':user.username
     }
     return render(request, 'app1/dashboard.html',context)
-    
+
 @login_required
 def profile(request):
     user = request.user
@@ -177,7 +163,7 @@ def signupuser(request):
             # Extract the specific error message from the form errors
             error_message = form.errors.get_json_data()['password2'][0]['message']
             return render(request, 'app1/signup.html', {'form': form, 'error_message': error_message})
-        
+
 def loginuser(request):
     if request.method == 'GET':
         return render(request,'app1/login.html',{'form':CustomAuthenticationForm()})
@@ -199,7 +185,7 @@ def logoutuser(request):
     if request.method == 'GET':
         logout(request)
         return redirect('home')
-    
+
 
 
 
@@ -268,12 +254,12 @@ def show_cart(request):
                     subtotal = product.price * quantity
                     # Add the previous product bill to the total bill
                     total_bill += subtotal
-               
+
     # If cart is empty or no cart details found
     if not cart or not cart.c_details:
         return render(request, 'app1/dashboard.html', {'k': 'Add items to Cart'})
   # Render the template with the cart, products, and total bill
-    return render(request, "app1/dashboard.html", {'p': cart_products, 'cart':'YOUR CART', 'bill': total_bill,'c':cart.c_details})   
+    return render(request, "app1/dashboard.html", {'p': cart_products, 'cart':'YOUR CART', 'bill': total_bill,'c':cart.c_details})
 
 
 
@@ -312,9 +298,9 @@ def update_cart(request):
         cart = Cart.objects.get(username=user)
 
         cart_details = cart.c_details
-        
+
         new_quantity = int(request.POST.get('quantity', 1))  # Default to 1 if not provided
-        
+
         # Get the maximum allowed quantity (you can adjust this according to your requirements)
         max_quantity = 10
 
@@ -324,11 +310,11 @@ def update_cart(request):
 
         # Update the quantity of the specified item in the cart
         cart_details[str(item_id)] = new_quantity
-        
+
         # Save the updated cart details
         cart.c_details = cart_details
         cart.save()
-        
+
     return redirect('show_cart')
 
 
@@ -386,7 +372,7 @@ def show_wishlists(request):
             wl_products = Product.objects.filter(Product_id__in=wl_items)
 
             return render(request, "app1/dashboard.html", {'o': wl_products, 'wishlist':'YOUR WISHLIST'})
-    
+
     # If cart is empty or no cart details found
     return render(request, 'app1/dashboard.html', {'l': 'Add items to Wishlist'})
 
