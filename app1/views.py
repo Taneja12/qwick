@@ -415,4 +415,3 @@ def remove_item_wishlist(request):
 
 
 
-    
