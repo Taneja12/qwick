@@ -33,7 +33,6 @@ urlpatterns = [
     path('signup',views.signupuser,name='signup'),
     path('login',views.loginuser,name='login'),
     path('logout',views.logoutuser,name='logout'),
-    path('settings',views.settings,name="settings"),
     path('profile',views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('add_wishlists',views.add_wishlists,name='add_wishlists'),

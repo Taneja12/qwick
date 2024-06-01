@@ -12,7 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from .decorators import unauthenticated_user 
 from django.contrib import messages
-
+from django.core.mail import EmailMessage, get_connection
+from django.conf import settings
 
 # Create your views here.
 
@@ -23,7 +24,7 @@ def home(request):
     page_obj = paginator.get_page(page_number)
     user_cart = Cart.objects.filter(username=request.user.username).first()
     cart_items = set(user_cart.c_details.keys()) if user_cart and user_cart.c_details else set()
-    print(cart_items)
+    # print(cart_items)
     return render(request,'app1/home.html',{'page_obj':page_obj, 'cart_items': cart_items})
 
 def  allproducts(request):
@@ -76,6 +77,19 @@ def add_record(request):
     if request.method=="POST":
         form=ContactForm(request.POST)
         if form.is_valid():
+            with get_connection(  
+                host=settings.EMAIL_HOST, 
+                port=settings.EMAIL_PORT,
+                username=settings.EMAIL_HOST_USER, 
+                password=settings.EMAIL_HOST_PASSWORD, 
+                use_tls=settings.EMAIL_USE_TLS  
+                ) as connection:  
+                subject = request.POST.get("subject")  
+                email_from = settings.EMAIL_HOST_USER  
+                recipient_list = [request.POST.get("email"), ]  
+                message = 'You have a mail from '+email_from+ '\n'+ 'The Message is : '+request.POST.get("message") 
+                EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()  
+ 
             form.save()
             return redirect('home')
 
@@ -186,8 +200,7 @@ def logoutuser(request):
         logout(request)
         return redirect('home')
     
-def settings(request):
-    return render(request,"app1/settings.html")
+
 
 
 @login_required

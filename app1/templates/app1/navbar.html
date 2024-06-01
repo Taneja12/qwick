@@ -66,7 +66,7 @@
           <a class="nav-link" href="{% url 'contactus' %}">Contact Us</a>
         </li>
       </ul>
-      <form class="d-flex" role="search" method="post" action="search">
+      <form class="d-flex" role="search" method="post" action="search" >
         {% csrf_token %}
         <input class="form-control me-2" type="search" placeholder="eg. burger, beverages" aria-label="Search"
           name="search1" id="field1" style="margin-left: 10px;border-radius: 34px;">
