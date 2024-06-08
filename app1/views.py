@@ -14,12 +14,8 @@ from .decorators import unauthenticated_user
 from django.contrib import messages
 from django.core.mail import EmailMessage, get_connection
 from django.conf import settings
-import sib_api_v3_sdk
-from sib_api_v3_sdk.rest import ApiException
+from django.core.mail import send_mail
 
-configuration = sib_api_v3_sdk.Configuration()
-configuration.api_key['api-key'] = settings.BREVO_API
-api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
 
 # Create your views here.
@@ -79,55 +75,56 @@ def contactus(request):
     form = ContactForm()
     return render(request, 'app1/contactus.html', {'form': form})
 
+
 def add_record(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():
-            em = request.POST.get('email')
-            sub = request.POST.get('subject')
-            msg = request.POST.get('message')
+            # Extract cleaned data
+            email = form.cleaned_data.get('email')
+            subject = form.cleaned_data.get('subject')
+            message = form.cleaned_data.get('message')
 
-            # Construct HTML content for the email to the user
-            user_html_content = f"""
-                <html><body><h2>Your Form is Submitted Successfully</h2>
-                                <p>Thank you for reaching out to us. We will get back to you soon.</
-                               <br> <p><strong>Email:</strong> {em}</p>
-                                <p><strong>Message:</strong> {msg}</p>
-                              </body></html>
-            """
-
-            # Construct HTML content for the email to the admin
-            admin_html_content = f"""
-                <html>
-                    <head></head>
-                    <body>
-                        <h2>New Contact Form Submission</h2>
-                        <p><strong>Email:</strong> {em}</p>
-                        <p><strong>Subject:</strong> {sub}</p>
-                        <p><strong>Message:</strong> {msg}</p>
-                    </body>
-                </html>
-            """
-
-            # Send email to the user
-            email_response_user = send_email(sub, user_html_content, em)
-            print("User Email Response:", email_response_user)
-
-            # Send email to the admin
-            email_response_admin = send_email("New Contact Form Submission", admin_html_content)
-            print("Admin Email Response:", email_response_admin)
-
-            # Save the form data
+            # Save form data to database
             form.save()
 
-            # Redirect to the home page after successful submission
+            # Send email to user
+            subject_user = 'Thank You for Your Message!'
+            message_user = f'''
+            <html>
+                <body>
+                    <h1>Thank You for Your Message!</h1>
+                    <p>We have received your message and will get back to you shortly.</p>
+                    <p><strong>From:</strong> {email}</p>
+                    <p><strong>Subject:</strong> {subject}</p>
+                    <p><strong>Message:</strong>{message}</p>
+                </body>
+            </html>
+            '''
+            send_mail(subject_user, '','Deepanshu Taneja', [email], html_message=message_user)
+
+            # Send email to admin
+            subject_admin = 'New Message Received'
+            message_admin = f'''
+            <html>
+                <body>
+                    <h1>New Message Received</h1>
+                    <p><strong>From:</strong> {email}</p>
+                    <p><strong>Subject:</strong> {subject}</p>
+                    <p><strong>Message:</strong>{message}</p>
+                </body>
+            </html>
+            '''
+            send_mail(subject_admin, '', 'Deepanshu Taneja', [settings.EMAIL_HOST_USER], html_message=message_admin)
+
+            # Redirect to home page after successful submission
             return redirect('home')
-
-    # If the request method is not POST or form is invalid, render the form again
     else:
-        form = ContactForm()
+        form = ContactForm()  # Create a new form instance if request method is not POST
+    
+    # Render the form template with the form
+    return redirect('home')
 
-    return render(request, 'app1/contactus.html', {'form': form})
 
 
 @login_required
@@ -447,23 +444,4 @@ def remove_item_wishlist(request):
         return redirect('show_wishlists')
 
     return render(request, 'app1/dashboard.html')  # You might want to handle GET requests differently
-
-
-
-
-def send_email(subject, html_content, to_address=None, receiver_username=None):
-    sender = {"name": "Deepanshu Taneja", "email": "tanejadeepanshu73@gmail.com"}
-    if to_address:
-        to = [{"email": to_address, "name": receiver_username}]
-    else:
-        to = [{"email": "tanejadeepanshu73@gmail.com", "name": "Deepanshu Taneja"}]
-    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, html_content=html_content, sender=sender, subject=subject)
-    try:
-        api_response = api_instance.send_transac_email(send_smtp_email)
-        print(api_response)
-        return {"message": "Email sent successfully!"}
-    except ApiException as e:
-        print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
-        return {"message": "Failed to send email."}
-
-
+ 
