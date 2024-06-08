@@ -133,4 +133,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/login'
 
-BREVO_API = os.environ['BREVO_API']
+BREVO_API = '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'
