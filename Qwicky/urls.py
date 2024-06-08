@@ -22,7 +22,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.home,name='home'),
+    path('',views.home,name='home1'),
     path('home',views.home,name='home'),
     path('allproducts',views.allproducts,name='allproducts'),
     path('aboutus',views.aboutus,name='aboutus'),
@@ -44,6 +44,8 @@ urlpatterns = [
     path('remove_item_wishlist',views.remove_item_wishlist,name='remove_item_wishlist'),
     path('update_cart',views.update_cart, name='update_cart'),
     path('calculate_bill', views.calculate_bill,name='calculate_bill'),
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('reset-password/<uidb64>/<token>/', views.reset_password, name='reset_password'),
     
 ]
 

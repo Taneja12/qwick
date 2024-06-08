@@ -15,6 +15,12 @@ from django.contrib import messages
 from django.core.mail import EmailMessage, get_connection
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.template.loader import render_to_string
+from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 
@@ -444,4 +450,52 @@ def remove_item_wishlist(request):
         return redirect('show_wishlists')
 
     return render(request, 'app1/dashboard.html')  # You might want to handle GET requests differently
- 
+
+
+
+
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
+            # Generate a password reset token
+            token = default_token_generator.make_token(user)
+            
+            # Construct the password reset link with token
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            home_url = request.build_absolute_uri(reverse('home1')) 
+            reset_url = '{}/reset-password/{}/{}/'.format(home_url, uid, token)
+            
+            # Send the reset email
+            subject = 'Password Reset'
+            message = render_to_string('app1/password_reset_email.html', {
+                'reset_url': reset_url,
+            })
+            send_mail(subject,'', 'Deepanshu Taneja', [email], html_message=message)
+            
+            return HttpResponse('Password reset instructions have been sent to your email.')
+        else:
+            return HttpResponse('No user found with that email address.')
+
+    return render(request, 'app1/forgot_password.html')
+
+def reset_password(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            password = request.POST.get('password')
+            # Update the user's password
+            user.set_password(password)
+            user.save()
+            return HttpResponse('Your password has been reset successfully.')
+        else:
+            return render(request, 'app1/reset_password.html')
+    else:
+        return HttpResponse('Invalid password reset link.')

@@ -47,13 +47,14 @@
         {% if k %}
         <h4 style="margin-top: 20px;">{{ d }}</h4>
         {% endif%}
-    
+
 
     </div>
 
     <div class="container text-center"
         style=" display: flex;justify-content: center;flex-direction: row;text-align: center;">
-        <form method="post" action="" style="background-color: rgb(252, 232, 196); padding: 10px; border-radius: 50px;width: 280px;">
+        <form method="post" action=""
+            style="background-color: rgb(252, 232, 196); padding: 10px; border-radius: 50px;width: 280px;">
             <br>
             {% csrf_token %}
             {{ form.as_p }}
@@ -64,8 +65,10 @@
     </div>
     <div style="display: flex; justify-content: center; margin-top: 10px;">
         <a>Don't have account?&nbsp</a>
-        <a href="{% url 'signup' %}">Sign Up</a></a>
+        <a href="{% url 'signup' %}">Sign Up</a>
     </div>
+    <a href="{% url 'forgot_password' %}" style="display: flex; justify-content: center; margin-top: 10px;">Forgot
+        password?</a>
     <br>
     <div>
         <!-- Footer Starts HEre  -->
