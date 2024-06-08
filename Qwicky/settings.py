@@ -134,3 +134,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/login'
 
 BREVO_API = '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'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'deepanshutaneja762@gmail.com'
+EMAIL_HOST_PASSWORD = 'hzxz zibi qqsc yyak'
