@@ -14,6 +14,13 @@ from .decorators import unauthenticated_user
 from django.contrib import messages
 from django.core.mail import EmailMessage, get_connection
 from django.conf import settings
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+
+configuration = sib_api_v3_sdk.Configuration()
+configuration.api_key['api-key'] = settings.BREVO_API
+api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+
 
 # Create your views here.
 
@@ -69,29 +76,59 @@ def aboutus(request):
     return render(request, 'app1/aboutus.html')
 
 def contactus(request):
-    form = ContactForm
-    return render(request, 'app1/contactus.html',{'form': form})
-
+    form = ContactForm()
+    return render(request, 'app1/contactus.html', {'form': form})
 
 def add_record(request):
-    if request.method=="POST":
-        form=ContactForm(request.POST)
+    if request.method == "POST":
+        form = ContactForm(request.POST)
         if form.is_valid():
-            with get_connection(  
-                host=settings.EMAIL_HOST, 
-            port=settings.EMAIL_PORT,  
-            username=settings.EMAIL_HOST_USER, 
-            password=settings.EMAIL_HOST_PASSWORD, 
-            use_tls=settings.EMAIL_USE_TLS  
-            ) as connection:  
-                subject = request.POST.get("subject")  
-                email_from = settings.EMAIL_HOST_USER  
-                recipient_list = [request.POST.get("email"), ]  
-                message = request.POST.get("message")  
-                EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()  
-        
+            em = request.POST.get('email')
+            sub = request.POST.get('subject')
+            msg = request.POST.get('message')
+
+            # Construct HTML content for the email to the user
+            user_html_content = f"""
+                <html><body><h2>Your Form is Submitted Successfully</h2>
+                                <p>Thank you for reaching out to us. We will get back to you soon.</
+                               <br> <p><strong>Email:</strong> {em}</p>
+                                <p><strong>Message:</strong> {msg}</p>
+                              </body></html>
+            """
+
+            # Construct HTML content for the email to the admin
+            admin_html_content = f"""
+                <html>
+                    <head></head>
+                    <body>
+                        <h2>New Contact Form Submission</h2>
+                        <p><strong>Email:</strong> {em}</p>
+                        <p><strong>Subject:</strong> {sub}</p>
+                        <p><strong>Message:</strong> {msg}</p>
+                    </body>
+                </html>
+            """
+
+            # Send email to the user
+            email_response_user = send_email(sub, user_html_content, em)
+            print("User Email Response:", email_response_user)
+
+            # Send email to the admin
+            email_response_admin = send_email("New Contact Form Submission", admin_html_content)
+            print("Admin Email Response:", email_response_admin)
+
+            # Save the form data
             form.save()
+
+            # Redirect to the home page after successful submission
             return redirect('home')
+
+    # If the request method is not POST or form is invalid, render the form again
+    else:
+        form = ContactForm()
+
+    return render(request, 'app1/contactus.html', {'form': form})
+
 
 @login_required
 def dashboard(request):
@@ -413,5 +450,20 @@ def remove_item_wishlist(request):
 
 
 
+
+def send_email(subject, html_content, to_address=None, receiver_username=None):
+    sender = {"name": "Deepanshu Taneja", "email": "tanejadeepanshu73@gmail.com"}
+    if to_address:
+        to = [{"email": to_address, "name": receiver_username}]
+    else:
+        to = [{"email": "tanejadeepanshu73@gmail.com", "name": "Deepanshu Taneja"}]
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, html_content=html_content, sender=sender, subject=subject)
+    try:
+        api_response = api_instance.send_transac_email(send_smtp_email)
+        print(api_response)
+        return {"message": "Email sent successfully!"}
+    except ApiException as e:
+        print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
+        return {"message": "Failed to send email."}
 
 
