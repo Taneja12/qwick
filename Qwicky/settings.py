@@ -133,7 +133,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/login'
 
+<<<<<<< HEAD
 BREVO_API = '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'
+=======
+BREVO_API = os.environ['BREVO_API']
+>>>>>>> 2de0a55ef5e7ab9f6ff6acf95f1f08f2cad682dc
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True

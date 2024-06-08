@@ -75,6 +75,7 @@ def contactus(request):
     form = ContactForm()
     return render(request, 'app1/contactus.html', {'form': form})
 
+
 def add_record(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
@@ -93,10 +94,17 @@ def add_record(request):
             <html>
                 <body>
                     <h1>Thank You for Your Message!</h1>
+<<<<<<< HEAD
                     <p><strong>From:&nbsp;</strong> {email}</p>
                     <p><strong>Subject:&nbsp;</strong> {subject}</p>
                     <p><strong>Message:&nbsp;</strong>{message}</p>
                     <p>We have received your message and will get back to you shortly.</p>
+=======
+                    <p>We have received your message and will get back to you shortly.</p>
+                    <p><strong>From:</strong> {email}</p>
+                    <p><strong>Subject:</strong> {subject}</p>
+                    <p><strong>Message:</strong>{message}</p>
+>>>>>>> 2de0a55ef5e7ab9f6ff6acf95f1f08f2cad682dc
                 </body>
             </html>
             '''
@@ -120,9 +128,16 @@ def add_record(request):
             return redirect('home')
     else:
         form = ContactForm()  # Create a new form instance if request method is not POST
+<<<<<<< HEAD
 
     # Render the form template with the form
     return redirect('home')
+=======
+    
+    # Render the form template with the form
+    return redirect('home')
+
+>>>>>>> 2de0a55ef5e7ab9f6ff6acf95f1f08f2cad682dc
 
 
 @login_required
@@ -442,8 +457,12 @@ def remove_item_wishlist(request):
         return redirect('show_wishlists')
 
     return render(request, 'app1/dashboard.html')  # You might want to handle GET requests differently
+<<<<<<< HEAD
 
 
 
 
 
+=======
+ 
+>>>>>>> 2de0a55ef5e7ab9f6ff6acf95f1f08f2cad682dc
